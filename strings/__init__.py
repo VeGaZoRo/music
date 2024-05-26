@@ -5,9 +5,7 @@ import yaml
 
 languages = {}
 languages_present = {}
-commands = {}
-def get_command(value: str) -> List:
-    return commands["command"][value]
+
 
 def get_string(lang: str):
     return languages[lang]
@@ -29,8 +27,3 @@ for filename in os.listdir(r"./strings/langs/"):
         for item in languages["en"]:
             if item not in languages[language_name]:
                 languages[language_name][item] = languages["en"][item]
-    try:
-        languages_present[language_name] = languages[language_name]["name"]
-    except:
-        print("There is some issue with the language file inside bot.")
-        exit()
