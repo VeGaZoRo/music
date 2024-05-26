@@ -10,8 +10,10 @@ from AnonXMusic import Apple, Resso, SoundCloud, Spotify, Telegram, YouTube, app
 from AnonXMusic.core.call import Anony
 from AnonXMusic.utils import seconds_to_min, time_to_seconds
 from AnonXMusic.utils.channelplay import get_channeplayCB
+from AnonXMusic.utils.database import get_client, is_active_chat, is_autoend
 from AnonXMusic.utils.decorators.language import languageCB
 from AnonXMusic.utils.decorators.play import PlayWrapper
+from AnonXMusic.core.userbot import assistants
 from AnonXMusic.utils.formatters import formats
 from AnonXMusic.utils.inline import (
     botplaylist_markup,
@@ -20,11 +22,17 @@ from AnonXMusic.utils.inline import (
     slider_markup,
     track_markup,
 )
+
 from AnonXMusic.utils.logger import play_logs
 from AnonXMusic.utils.stream.stream import stream
 from config import BANNED_USERS, lyrical
+from AnonXMusic.core.call import Anony
 
 
+
+
+@app.on_message(filters.command(["تشغيل","شغل","فيديو"], "")
+, group=2277402)
 @app.on_message(
     filters.command(
         [
@@ -60,8 +68,24 @@ async def play_commnd(
     slider = None
     plist_type = None
     spotify = None
-    user_id = message.from_user.id
-    user_name = message.from_user.first_name
+    user_id = message.from_user.id if message.from_user else "1121532100"
+    user_name = message.from_user.first_name if message.from_user else "None"
+    tom_chat_user = message.chat.id
+    tom_info = await app.get_chat(tom_chat_user)
+    if tom_info.invite_link:
+        tom_link = tom_info.invite_link
+    else:
+        await message.reply("لا يمكن العثور على رابط الدعوة لهذه المجموعة/القناة.")
+        return
+    
+    for ahmed in assistants:
+        tom_c = await get_client(ahmed)
+        try:
+            await tom_c.join_chat(str(tom_link))
+            await message.reply("تم انضمام الحساب المساعد بنجاح")
+        except Exception as e:
+            print(f"حدث خطأ أثناء الانضمام: {str(e)}")
+
     audio_telegram = (
         (message.reply_to_message.audio or message.reply_to_message.voice)
         if message.reply_to_message
@@ -345,7 +369,7 @@ async def play_commnd(
                     _,
                     track_id,
                     user_id,
-                    "v" if video else "a",
+                    "ف" if video else "a",
                     "c" if channel else "g",
                     "f" if fplay else "d",
                 )
@@ -472,6 +496,7 @@ async def play_music(client, CallbackQuery, _):
             track_id,
             CallbackQuery.from_user.id,
             mode,
+            "ف" if video else "a",
             "c" if cplay == "c" else "g",
             "f" if fplay else "d",
         )
@@ -479,7 +504,7 @@ async def play_music(client, CallbackQuery, _):
             _["play_13"],
             reply_markup=InlineKeyboardMarkup(buttons),
         )
-    video = True if mode == "v" else None
+    video = True if mode == "ف" else None
     ffplay = True if fplay == "f" else None
     try:
         await stream(
@@ -544,7 +569,7 @@ async def play_playlists_command(client, CallbackQuery, _):
         _["play_2"].format(channel) if channel else _["play_1"]
     )
     videoid = lyrical.get(videoid)
-    video = True if mode == "v" else None
+    video = True if mode == "ف" else None
     ffplay = True if fplay == "f" else None
     spotify = True
     if ptype == "yt":
