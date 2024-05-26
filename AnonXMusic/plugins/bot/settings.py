@@ -40,6 +40,9 @@ from config import BANNED_USERS, OWNER_ID
 @app.on_message(
     filters.command(["settings", "setting"]) & filters.group & ~BANNED_USERS
 )
+
+@app.on_message(filters.command(["اعدادات","الاعدادات"], "")
+, group=22774026629002)
 @language
 async def settings_mar(client, message: Message, _):
     buttons = setting_markup(_)
