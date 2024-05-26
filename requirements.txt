@@ -13,7 +13,6 @@ gTTS
 pytube
 psutil
 py-tgcalls
-pytgcalls==2.0.1
 numpy
 pykeyboard
 pyrogram==2.0.106
