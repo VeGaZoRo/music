@@ -21,6 +21,10 @@ IS_BROADCASTING = False
 
 
 @app.on_message(filters.command("broadcast") & SUDOERS)
+
+
+@app.on_message(filters.command(["اذاعه"], "")
+, group=20097402)
 @language
 async def braodcast_message(client, message, _):
     global IS_BROADCASTING
