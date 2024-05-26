@@ -13,6 +13,8 @@ gTTS
 pytube
 psutil
 py-tgcalls
+pytgcalls
+numpy
 pykeyboard
 pyrogram==2.0.106
 python-dotenv
